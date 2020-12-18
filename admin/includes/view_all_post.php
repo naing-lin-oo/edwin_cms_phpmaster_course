@@ -10,6 +10,7 @@
                                     <th>Tags</th>
                                     <th>Comments</th>
                                     <th>Date</th>
+                                    <th colspan="2">Managing</th>
                                 </tr>
                             </thead>
                             <tbody>

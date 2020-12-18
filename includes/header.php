@@ -1,4 +1,6 @@
+<?php ob_start(); ?>
 <?php require("includes/db.php"); ?>
+<?php require("admin/functions.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
