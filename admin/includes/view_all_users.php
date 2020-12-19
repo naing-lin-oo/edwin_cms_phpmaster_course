@@ -9,6 +9,7 @@
                                     <th>Role</th>
                                     <th>Admin</th>
                                     <th>Subscriber</th>
+                                    <th colspan="2">Managing</th>
                                 </tr>
                             </thead>
                             <tbody>

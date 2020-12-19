@@ -10,6 +10,8 @@
                                     <th>Tags</th>
                                     <th>Comments</th>
                                     <th>Date</th>
+                                    <th>Publish</th>
+                                    <th>Draft</th>
                                     <th colspan="2">Managing</th>
                                 </tr>
                             </thead>
@@ -45,6 +47,8 @@ while($row = mysqli_fetch_assoc($edit_select_categories)) {
         echo "<td>{$post_tags}</td>";
         echo "<td>{$post_comment_count}</td>";
         echo "<td>{$post_date}</td>";
+        echo "<td><a href='posts.php?published=$post_id'>published</a></td>";
+        echo "<td><a href='posts.php?draft=$post_id'>draft</a></td>";
         echo "<td><a href='posts.php?source=edit_post&p_id=$post_id'>Edit</a></td>";
         echo "<td><a href='posts.php?delete=$post_id'>Delete</a></td>";
         echo "</tr>";
@@ -53,6 +57,21 @@ while($row = mysqli_fetch_assoc($edit_select_categories)) {
                             </tbody>
                         </table>
 <?php
+    if(isset($_GET['published'])) {
+        $published_post_id = $_GET['published'];
+        $query = "UPDATE posts SET post_status = 'published' WHERE post_id = {$published_post_id}";
+        $published_post_query = mysqli_query($connection, $query);
+        confirmQuery($published_post_query);
+        header("Location: posts.php");
+    }
+
+    if(isset($_GET['draft'])) {
+        $draft_post_id = $_GET['draft'];
+        $query = "UPDATE posts SET post_status = 'draft' WHERE post_id = {$draft_post_id}";
+        $draft_post_query = mysqli_query($connection, $query);
+        confirmQuery($draft_post_query);
+        header("Location: posts.php");
+    }
     if(isset($_GET['delete'])) {
         $delete_post_id = $_GET['delete'];
         $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
