@@ -16,9 +16,9 @@
                     <small>Secondary Text</small>
                 </h1>
 <?php
-    $query = "SELECT * FROM posts WHERE post_status = 'published'";
-    $select_published_post_query = mysqli_query($connection, $query);
-    while($row = mysqli_fetch_assoc($select_published_post_query)) {
+    $query = "SELECT * FROM posts";
+    $select_all_posts_query = mysqli_query($connection, $query);
+    while($row = mysqli_fetch_assoc($select_all_posts_query)) {
         $post_id = $row['post_id'];
         $post_title = $row['post_title'];
         $post_author = $row['post_author'];
@@ -27,11 +27,11 @@
         $post_content = substr($row['post_content'],0,10);
         $post_status = $row['post_status'];
 
-        $result = mysqli_num_rows($select_published_post_query);
-        echo $result;
-        if($result = '') {
+        if($post_status !== "published") {
             echo "<h2>No Post Sorry</h2>";
-        } else {
+        }
+     else {
+
 
 ?>
                 <!-- First Blog Post -->
@@ -55,7 +55,6 @@
 ?>
 
             </div>
-            <?php echo $result; ?>
 
             <!-- Blog Sidebar Widgets Column -->
 <?php require('includes/sidebar.php'); ?>
