@@ -1,6 +1,12 @@
 <?php ob_start(); ?>
 <?php require("functions.php"); ?>
 <?php require("../includes/db.php"); ?>
+<?php session_start(); ?>
+<?php 
+    if(empty($_SESSION['username'] && empty($_SESSION['user_password']))) {
+        header("Location: ../index.php");
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

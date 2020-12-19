@@ -18,9 +18,7 @@
         $cat_post_id = $_GET["category"];
         $query = "SELECT * FROM posts WHERE post_category_id = $cat_post_id";
         $search_query = mysqli_query($connection, $query);
-        if(!$search_query) {
-            die("QUERY FAILED" . mysqli_error($connection));
-        }
+        confirmQuery($search_query);
         $count = mysqli_num_rows($search_query);
         if($count == 0) {
             echo "<h1>No Result</h1>";

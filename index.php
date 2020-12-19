@@ -16,7 +16,7 @@
                     <small>Secondary Text</small>
                 </h1>
 <?php
-    $query = "SELECT * FROM posts";
+    $query = "SELECT * FROM posts WHERE post_status= 'published' ";
     $select_all_posts_query = mysqli_query($connection, $query);
     while($row = mysqli_fetch_assoc($select_all_posts_query)) {
         $post_id = $row['post_id'];
@@ -27,8 +27,9 @@
         $post_content = substr($row['post_content'],0,10);
         $post_status = $row['post_status'];
 
-        if($post_status !== "published") {
-            echo "<h2>No Post Sorry</h2>";
+        $count = mysqli_num_rows($select_all_posts_query);
+        if($count == 0) {
+            echo "<h1>No Result</h1>";
         }
      else {
 
