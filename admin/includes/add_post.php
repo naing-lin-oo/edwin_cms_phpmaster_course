@@ -20,7 +20,9 @@
 
         $create_post_query = mysqli_query($connection, $query);
         confirmQuery($create_post_query);
-        header("Location: posts.php");
+        $the_post_id = mysqli_insert_id($connection);
+        echo "Updated Post: " . " " . "<a href='../post.php?p_id={$the_post_id}'>View Post</a> OR <a href='posts.php'>View More Posts</a>";
+        // header("Location: posts.php");
     }
 ?>
 <form action="" method="post" enctype="multipart/form-data">   
@@ -48,8 +50,11 @@
         <input type="text" class="form-control" name="post_author">
     </div>
     <div class="form-group">
-        <label for="post_status">Post Status</label>
-        <input type="text" class="form-control" name="post_status">
+        <select class="form-control" name="post_status" id="">
+            <option value="draft">Select Post Status</option>
+            <option value="published">published</option>
+            <option value="draft">draft</option>
+        </select>
     </div>
     <div class="form-group">
         <label for="post_image">Post Image</label>

@@ -51,7 +51,8 @@
 
         $update_post_query = mysqli_query($connection, $query);
         confirmQuery($update_post_query);
-        header("Location: posts.php");
+        echo "Updated Post: " . " " . "<a href='../post.php?p_id={$edit_post_id}'>View Updated Post</a> OR <a href='posts.php'>Edit More Posts</a>";
+        //header("Location: posts.php");
     }
     }
 ?>
@@ -69,7 +70,12 @@
         $cat_id = $row['cat_id'];
         $cat_title = $row['cat_title'];
 
-        echo "<option value='{$cat_id}'>{$cat_title}</option>";
+        if($cat_id == $post_category_id) {
+            echo "<option value='{$cat_id}' selected>{$cat_title}</option>"; 
+        } else {
+            echo "<option value='{$cat_id}'>{$cat_title}</option>";
+        }
+        
     }
 ?>
         </select>
@@ -79,12 +85,24 @@
         <input type="text" class="form-control" name="post_author" value="<?php echo $post_author;?>">
     </div>
     <div class="form-group">
-        <label for="post_status">Post Status</label>
-        <input type="text" class="form-control" name="post_status" value="<?php echo $post_status;?>"> 
+        <select class="form-control" name="post_status" id="">
+            <option value="<?php echo $post_status; ?>"><?php echo $post_status; ?></option>
+<?php
+    if($post_status == "published") {
+        echo "<option value='draft'>draft</option>";
+    } else {
+        echo "<option value='published'>published</option>";
+    }
+?> 
+        </select>
     </div>
+    <!-- <div class="form-group">
+        <label for="post_status">Post Status</label>
+        <input type="text" class="form-control" name="post_status" value="<?php //echo $post_status;?>"> 
+    </div> -->
     <div class="form-group">
         <label for="post_image">Post Image</label><br>
-        <img height="55px" width="100px" src="../images/<?php echo $post_image;?>" alt="">
+        <img height="55px" width="100px" src="../images/<?php echo $post_image;?>" alt=""><br><br>
         <input type="file"  name="image">
     </div>
     <div class="form-group">

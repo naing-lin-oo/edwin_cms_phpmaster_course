@@ -22,10 +22,16 @@
     }
 ?>
                     <li><a class="" href="admin">Admin</a></li>
+<?php
+    if(isset($_SESSION['user_role'])) {
+        if(isset($_GET['p_id'])) {
+            $ep_id = $_GET['p_id'];
+            echo "<li><a class='' href='admin/posts.php?source=edit_post&p_id=$ep_id'>Edit Post</a></li>";
+        }
+    }
+?>         
                 </ul>
-                
             </div>
-            
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->

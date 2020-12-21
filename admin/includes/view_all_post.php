@@ -1,21 +1,60 @@
-<table class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Author</th>
-                                    <th>Title</th>
-                                    <th>Category</th>
-                                    <th>Status</th>
-                                    <th>Image</th>
-                                    <th>Tags</th>
-                                    <th>Comments</th>
-                                    <th>Date</th>
-                                    <th>Publish</th>
-                                    <th>Draft</th>
-                                    <th colspan="2">Managing</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+<?php
+    if(isset($_POST['checkBoxArray'])) {
+        foreach($_POST['checkBoxArray'] as $postValueId) {
+            $bulk_options = $_POST['bulk_options'];
+            switch($bulk_options) {
+                case 'published':
+                    $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId}"; 
+                    $update_to_published_status = mysqli_query($connection, $query);
+                    confirmQuery($update_to_published_status);
+                break;
+                case 'draft':
+                    $query = "UPDATE posts SET post_status = '{$bulk_options}' WHERE post_id = {$postValueId}"; 
+                    $update_to_draft_status = mysqli_query($connection, $query);
+                    confirmQuery($update_to_draft_status);
+                break;
+                case 'delete':
+                    $query = "DELETE FROM posts WHERE post_id = {$postValueId}"; 
+                    $update_to_delete_status = mysqli_query($connection, $query);
+                    confirmQuery($update_to_delete_status);
+                break;
+            }
+        }   
+    }
+?>
+<form action="" method="POST">
+    <table class="table table-bordered table-hover">
+        <div id="bulkOptionsContainer" class="col-xs-4" style="padding: 0px">
+            <select name="bulk_options" class="form-control" id="">
+                <option value="">Select Option</option>
+                <option value="published">Publish</option>
+                <option value="draft">Draft</option>
+                <option value="delete">Delete</option>
+            </select><br>
+        </div>
+        <div class="col-xs-4">
+            <input type="submit" name="submit" class="btn btn-success" value="Apply">
+            <a class="btn btn-primary" href="posts.php?source=add_post">Add New</a>
+        </div>
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="selectAllBoxes"></th>
+                <th>Id</th>
+                <th>Author</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Image</th>
+                <th>Tags</th>
+                <th>Comments</th>
+                <th>Date</th>
+                <th>Publish</th>
+                <th>Draft</th>
+                <th>View Post</th>
+                <th colspan="2">Managing</th>
+            </tr>
+        </thead>
+        <tbody>
 <?php
     $query = "SELECT * FROM posts";
     $select_posts = mysqli_query($connection, $query);
@@ -31,6 +70,7 @@
         $post_date = $row['post_date'];
 
         echo "<tr>";
+        echo "<td><input type='checkbox' class='checkBoxes' name='checkBoxArray[]' value={$post_id}></td>";
         echo "<td>{$post_id}</td>";
         echo "<td>{$post_author}</td>";
         echo "<td>{$post_title}</td>";
@@ -49,13 +89,15 @@ while($row = mysqli_fetch_assoc($edit_select_categories)) {
         echo "<td>{$post_date}</td>";
         echo "<td><a href='posts.php?published=$post_id'>published</a></td>";
         echo "<td><a href='posts.php?draft=$post_id'>draft</a></td>";
+        echo "<td><a href='../post.php?p_id=$post_id'>View Post</a></td>";
         echo "<td><a href='posts.php?source=edit_post&p_id=$post_id'>Edit</a></td>";
         echo "<td><a href='posts.php?delete=$post_id'>Delete</a></td>";
         echo "</tr>";
     }
 ?>
-                            </tbody>
-                        </table>
+        </tbody>
+    </table>
+</form>
 <?php
     if(isset($_GET['published'])) {
         $published_post_id = $_GET['published'];
@@ -77,6 +119,9 @@ while($row = mysqli_fetch_assoc($edit_select_categories)) {
         $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
         $delete_post_query = mysqli_query($connection, $query);
         confirmQuery($delete_post_query);
-        header("Location: posts.php");
+        $query = "DELETE FROM comments WHERE comment_post_id = $delete_post_id";
+        $delete_post_comments_query = mysqli_query($connection, $query);
+        confirmQuery($delete_post_comments_query);
+        header("Location: posts.php");    
     }
 ?>
