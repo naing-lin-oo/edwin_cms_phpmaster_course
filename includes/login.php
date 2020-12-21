@@ -23,6 +23,8 @@
             $db_user_role = $row['user_role'];
         }
 
+        $user_password = crypt($user_password, $db_user_password);
+
         if($username !== $db_username || $user_password !== $db_user_password || $db_user_role !== 'Admin') {
             header("Location: ../index.php");
         } else {
