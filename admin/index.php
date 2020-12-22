@@ -1,7 +1,6 @@
 <?php require("includes/admin_header.php"); ?>
 
     <div id="wrapper">
-
         <!-- Navigation -->
 <?php require("includes/admin_navigation.php"); ?>
 
