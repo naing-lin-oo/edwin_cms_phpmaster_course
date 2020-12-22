@@ -11,12 +11,14 @@
         $user_email = $_POST['user_email'];
         $user_password = $_POST['user_password'];
 
-        $query = "SELECT randSalt FROM users";
-        $select_randsalt_query = mysqli_query($connection, $query);
-        confirmQuery($select_randsalt_query);
-        $row = mysqli_fetch_array($select_randsalt_query);
-        $salt = $row['randSalt'];
-        $user_password = crypt($user_password, $salt);
+        $user_password = password_hash($user_password, PASSWORD_BCRYPT, array('cost' => 12));
+
+        // $query = "SELECT randSalt FROM users";
+        // $select_randsalt_query = mysqli_query($connection, $query);
+        // confirmQuery($select_randsalt_query);
+        // $row = mysqli_fetch_array($select_randsalt_query);
+        // $salt = $row['randSalt'];
+        // $user_password = crypt($user_password, $salt);
         // $post_date = date('d-m-y');
         // $post_comment_count = 4;
 

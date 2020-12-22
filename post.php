@@ -64,10 +64,10 @@
             $query .= "VALUES ({$post_id}, '{$comment_author}', '{$comment_email}', '{$comment_content}', 'unapproved', now())";
             $create_comment_query = mysqli_query($connection, $query);
             confirmQuery($create_comment_query);
-            $query  = "UPDATE posts SET post_comment_count = post_comment_count + 1 ";
-            $query .= "WHERE post_id = $post_id";
-            $update_comment_count = mysqli_query($connection, $query);
-            confirmQuery($update_comment_count);
+            // $query  = "UPDATE posts SET post_comment_count = post_comment_count + 1 ";
+            // $query .= "WHERE post_id = $post_id";
+            // $update_comment_count = mysqli_query($connection, $query);
+            // confirmQuery($update_comment_count);
         } else{
             echo "<script>alert('Fields cannot be empty')</script>";
         }       

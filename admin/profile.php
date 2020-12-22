@@ -40,6 +40,10 @@
         $user_email = $_POST['user_email'];
         $user_password = $_POST['user_password'];
 
+        if($user_password !== $user_passwords) {
+            $user_passwords = password_hash($user_passwords, PASSWORD_BCRYPT, array('cost' => 12));
+        }
+
         // move_uploaded_file($post_image_temp, "../images/$post_image");
 
         // if(empty($post_image)) {

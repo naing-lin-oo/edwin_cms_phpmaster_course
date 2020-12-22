@@ -3,7 +3,7 @@
 <?php require("functions.php"); ?>
 <?php session_start(); ?>
 <?php 
-    if(empty($_SESSION['username'] && empty($_SESSION['user_password']))) {
+    if($_SESSION['user_role'] !== 'Admin') {
         header("Location: ../index.php");
     }
 ?>

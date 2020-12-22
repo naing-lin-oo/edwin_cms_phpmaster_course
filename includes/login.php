@@ -22,12 +22,7 @@
             $db_user_lastname = $row['user_lastname'];
             $db_user_role = $row['user_role'];
         }
-
-        $user_password = crypt($user_password, $db_user_password);
-
-        if($username !== $db_username || $user_password !== $db_user_password || $db_user_role !== 'Admin') {
-            header("Location: ../index.php");
-        } else {
+        if(password_verify($user_password, $db_user_password)) {
             $_SESSION['user_id'] = $db_user_id;
             $_SESSION['username'] = $db_username;
             $_SESSION['user_firstname'] = $db_user_firstname;
@@ -35,6 +30,8 @@
             $_SESSION['user_role'] = $db_user_role;
 
             header("Location: ../admin/index.php");
+        } else {
+            header("Location: ../index.php");
         }
     }
 ?>

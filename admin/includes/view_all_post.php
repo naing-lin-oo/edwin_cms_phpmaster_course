@@ -39,7 +39,6 @@
                     }
                 }
             }   
-    
 ?>
 <form action="" method="POST">
     <table class="table table-bordered table-hover">
@@ -90,24 +89,30 @@
         $post_comment_count = $row['post_comment_count'];
         $post_date = $row['post_date'];
         $post_view_count = $row['post_view_count'];
-
         echo "<tr>";
         echo "<td><input type='checkbox' class='checkBoxes' name='checkBoxArray[]' value={$post_id}></td>";
         echo "<td>{$post_id}</td>";
         echo "<td>{$post_author}</td>";
         echo "<td>{$post_title}</td>";
 
-$query = "SELECT * FROM categories WHERE cat_id={$post_category_id}";
-$edit_select_categories = mysqli_query($connection, $query);
-while($row = mysqli_fetch_assoc($edit_select_categories)) {
-    $cat_title = $row['cat_title'];
+        $query = "SELECT * FROM categories WHERE cat_id={$post_category_id}";
+        $edit_select_categories = mysqli_query($connection, $query);
+        while($row = mysqli_fetch_assoc($edit_select_categories)) {
+            $cat_title = $row['cat_title'];
 
         echo "<td>{$cat_title}</td>";
-}
+        }
+        
         echo "<td>{$post_status}</td>";
         echo "<td><img height='40px' width='80px' src='../images/$post_image'></td>";
         echo "<td>{$post_tags}</td>";
-        echo "<td>{$post_comment_count}</td>";
+
+        $query = "SELECT * FROM comments WHERE comment_post_id = {$post_id}";
+        $send_comment_query = mysqli_query($connection, $query);
+        $count = mysqli_num_rows($send_comment_query);
+
+        echo "<td><a href='comments.php?cp_id={$post_id}'>{$count}</a></td>";
+
         echo "<td>{$post_date}</td>";
         echo "<td><a href='posts.php?published=$post_id'>published</a></td>";
         echo "<td><a href='posts.php?draft=$post_id'>draft</a></td>";

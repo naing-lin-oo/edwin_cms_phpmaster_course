@@ -35,12 +35,7 @@
         //     }
         // }
         if($user_password !== $user_passwords) {
-            $query = "SELECT randSalt FROM users";
-            $select_randsalt_query = mysqli_query($connection, $query);
-            confirmQuery($select_randsalt_query);
-            $row = mysqli_fetch_array($select_randsalt_query);
-            $salt = $row['randSalt'];
-            $user_passwords = crypt($user_passwords, $salt);
+            $user_passwords = password_hash($user_passwords, PASSWORD_BCRYPT, array('cost' => 12));
         }
         $query  = "UPDATE users SET ";
         $query .= "user_firstname = '{$user_firstname}', ";

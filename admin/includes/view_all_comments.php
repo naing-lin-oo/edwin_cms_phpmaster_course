@@ -15,8 +15,15 @@
                             </thead>
                             <tbody>
 <?php
-    $query = "SELECT * FROM comments";
-    $select_comments = mysqli_query($connection, $query);
+    if(isset($_GET['cp_id'])) {
+        $cp_id = $_GET['cp_id'];
+        $query = "SELECT * FROM comments WHERE comment_post_id = {$cp_id}";
+        $select_comments = mysqli_query($connection, $query);
+    } else {
+        $query = "SELECT * FROM comments";
+        $select_comments = mysqli_query($connection, $query);
+    }
+
     while($row = mysqli_fetch_assoc($select_comments)) {
         $comment_id = $row['comment_id'];
         $comment_post_id = $row['comment_post_id'];
@@ -33,20 +40,28 @@
         echo "<td>{$comment_email}</td>";
         echo "<td>{$comment_status}</td>";
 
-$query = "SELECT * FROM posts WHERE post_id = {$comment_post_id}";
-$comment_post = mysqli_query($connection, $query);
-while($row = mysqli_fetch_assoc($comment_post)) {
-    $post_id = $row['post_id'];
-    $post_title = $row['post_title'];
+        $query = "SELECT * FROM posts WHERE post_id = {$comment_post_id}";
+        $comment_post = mysqli_query($connection, $query);
+        while($row = mysqli_fetch_assoc($comment_post)) {
+            $post_id = $row['post_id'];
+            $post_title = $row['post_title'];
 
-        echo "<td><a href='../post.php?p_id={$post_id}'>{$post_title}</a></td>";
-}
-        echo "<td>{$comment_date}</td>";
-        echo "<td><a href='comments.php?approve=$comment_id'>Approve</a></td>";
-        echo "<td><a href='comments.php?unapprove=$comment_id'>Unapprove</a></td>";
-        echo "<td><a href='comments.php?delete=$comment_id'>Delete</a></td>";
-        echo "</tr>";
-    }
+                echo "<td><a href='../post.php?p_id={$post_id}'>{$post_title}</a></td>";
+        }
+                echo "<td>{$comment_date}</td>";
+                echo "<td><a href='comments.php?approve=$comment_id'>Approve</a></td>";
+                echo "<td><a href='comments.php?unapprove=$comment_id'>Unapprove</a></td>";
+
+                if(isset($_GET['cp_id'])) {
+                    $cp_id = $_GET['cp_id'];
+                    echo "<td><a href='comments.php?delete=$comment_id&cp_id={$cp_id}'>Delete</a></td>";
+                } else {
+                    echo "<td><a href='comments.php?delete=$comment_id'>Delete</a></td>";
+                }
+               
+                echo "</tr>";
+            }
+        
 ?>
                             </tbody>
                         </table>
@@ -72,6 +87,13 @@ while($row = mysqli_fetch_assoc($comment_post)) {
         $query = "DELETE FROM comments WHERE comment_id = $delete_comment_id";
         $delete_comment_query = mysqli_query($connection, $query);
         confirmQuery($delete_comment_query);
-        header("Location: comments.php");
-    }
+
+        if(isset($_GET['cp_id'])) {
+            $cp_id = $_GET['cp_id'];
+            header("Location: comments.php?cp_id={$cp_id}");
+        } else {
+            header("Location: comments.php");
+        }
+    }  
+    
 ?>
