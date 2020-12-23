@@ -23,6 +23,7 @@
                     $select_posts_query = mysqli_query($connection, $query);
                     while($row = mysqli_fetch_array($select_posts_query)) {
                         $post_author = $row['post_author'];
+                        $post_user = $row['post_user'];
                         $post_category_id = $row['post_category_id'];
                         $post_title = $row['post_title'];
                         $post_status = $row['post_status'];
@@ -32,8 +33,8 @@
                         $post_date = $row['post_date'];
                         $post_content = $row['post_content'];
                     }
-                    $query = "INSERT INTO posts (post_category_id, post_title, post_author, post_date, post_image, post_tags, post_content, post_comment_count, post_status) ";
-                    $query.= "VALUES ({$post_category_id},'{$post_title}','{$post_author}',now(),'{$post_image}','{$post_tags}','{$post_content}',{$post_comment_count},'{$post_status}')";
+                    $query = "INSERT INTO posts (post_category_id, post_title, post_author, post_user, post_date, post_image, post_tags, post_content, post_comment_count, post_status) ";
+                    $query.= "VALUES ({$post_category_id},'{$post_title}','{$post_author}','{$post_user}',now(),'{$post_image}','{$post_tags}','{$post_content}',{$post_comment_count},'{$post_status}')";
                     $copy_query = mysqli_query($connection, $query);
                     confirmQuery($copy_query);
                     }
@@ -59,7 +60,7 @@
             <tr>
                 <th><input type="checkbox" id="selectAllBoxes"></th>
                 <th>Id</th>
-                <th>Author</th>
+                <th>User</th>
                 <th>Title</th>
                 <th>Category</th>
                 <th>Status</th>
@@ -81,6 +82,7 @@
     while($row = mysqli_fetch_assoc($select_posts)) {
         $post_id = $row['post_id'];
         $post_author = $row['post_author'];
+        $post_user = $row['post_user'];
         $post_category_id = $row['post_category_id'];
         $post_title = $row['post_title'];
         $post_status = $row['post_status'];
@@ -92,7 +94,13 @@
         echo "<tr>";
         echo "<td><input type='checkbox' class='checkBoxes' name='checkBoxArray[]' value={$post_id}></td>";
         echo "<td>{$post_id}</td>";
-        echo "<td>{$post_author}</td>";
+
+        if(!empty($post_author)) {
+            echo "<td>$post_author</td>";
+        } elseif(!empty($post_user)) {
+            echo "<td>$post_user</td>";
+        }
+
         echo "<td>{$post_title}</td>";
 
         $query = "SELECT * FROM categories WHERE cat_id={$post_category_id}";
@@ -143,14 +151,18 @@
         header("Location: posts.php");
     }
     if(isset($_GET['delete'])) {
-        $delete_post_id = $_GET['delete'];
-        $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
-        $delete_post_query = mysqli_query($connection, $query);
-        confirmQuery($delete_post_query);
-        $query = "DELETE FROM comments WHERE comment_post_id = $delete_post_id";
-        $delete_post_comments_query = mysqli_query($connection, $query);
-        confirmQuery($delete_post_comments_query);
-        header("Location: posts.php");    
+        if(isset($_SESSION['user_role'])) {
+            if($_SESSION['user_role'] == 'Admin') {
+                $delete_post_id = mysqli_real_escape_string($connection, $_GET['delete']);
+                $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
+                $delete_post_query = mysqli_query($connection, $query);
+                confirmQuery($delete_post_query);
+                $query = "DELETE FROM comments WHERE comment_post_id = $delete_post_id";
+                $delete_post_comments_query = mysqli_query($connection, $query);
+                confirmQuery($delete_post_comments_query);
+                header("Location: posts.php");
+            }  
+        }   
     }
     if(isset($_GET['reset'])) {
         $post_reset_id = $_GET['reset'];
