@@ -1,6 +1,6 @@
 <?php
     if(isset($_GET['user_id'])) {
-        $edit_user_id = $_GET['user_id'];
+        $edit_user_id = escape($_GET['user_id']);
         $query = "SELECT * FROM users WHERE user_id=$edit_user_id";
         $select_user_by_id = mysqli_query($connection, $query);
         while($row = mysqli_fetch_assoc($select_user_by_id)) {
@@ -14,16 +14,16 @@
         }
 
     if(isset($_POST['update_user'])) {
-        $user_firstname = $_POST['user_firstname'];
-        $user_lastname = $_POST['user_lastname'];
-        $user_role = $_POST['user_role'];
-        $username = $_POST['username'];
+        $user_firstname = escape($_POST['user_firstname']);
+        $user_lastname = escape($_POST['user_lastname']);
+        $user_role = escape($_POST['user_role']);
+        $username = escape($_POST['username']);
 
-        // $post_image = $_FILES['image']['name'];
-        // $post_image_temp = $_FILES['image']['tmp_name'];
+        // $post_image = escape($_FILES['image']['name']);
+        // $post_image_temp = escape($_FILES['image']['tmp_name']);
 
-        $user_email = $_POST['user_email'];
-        $user_passwords = $_POST['user_password'];
+        $user_email = escape($_POST['user_email']);
+        $user_passwords = escape($_POST['user_password']);
 
         // move_uploaded_file($post_image_temp, "../images/$post_image");
 

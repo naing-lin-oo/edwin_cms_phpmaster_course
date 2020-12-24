@@ -45,7 +45,7 @@
                 </p>
                 <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo $post_date; ?></p>
                 <hr>
-                <img class="img-responsive" src="images/<?php echo $post_image;?>" alt="">
+                <img width="100%" height="300px" src="images/<?php echo $post_image;?>" alt="">
                 <hr>
                 <p><?php echo $post_content; ?></p>
 
@@ -60,10 +60,10 @@
                 <!-- Blog Comments -->
 <?php
     if(isset($_POST['create_comment']))  {
-        $post_id = $_GET['p_id'];
-        $comment_author = $_POST['comment_author'];
-        $comment_email = $_POST['comment_email'];
-        $comment_content = $_POST['comment_content'];
+        $post_id = escape($_GET['p_id']);
+        $comment_author = escape($_POST['comment_author']);
+        $comment_email = escape($_POST['comment_email']);
+        $comment_content = escape($_POST['comment_content']);
         if(!empty($comment_author) && !empty($comment_email) && !empty($comment_content)) {
             $query  = "INSERT INTO comments (comment_post_id, comment_author, comment_email, comment_content, comment_status, comment_date) ";
             $query .= "VALUES ({$post_id}, '{$comment_author}', '{$comment_email}', '{$comment_content}', 'unapproved', now())";

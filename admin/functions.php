@@ -1,4 +1,9 @@
 <?php
+    function escape($string) {
+        global $connection;
+        return mysqli_real_escape_string($connection, trim($string));
+    }
+
     function confirmQuery($result){
         global $connection;
         if(!$result) {
@@ -9,7 +14,7 @@
     function insertCategories() {
         global $connection;
         if(isset($_POST['submit'])) {
-            $cat_title = $_POST['cat_title'];
+            $cat_title = escape($_POST['cat_title']);
             if($cat_title == "" || empty($cat_title)) {
                 echo "This field should not be empty";
             } else {
@@ -40,11 +45,16 @@
 
     function deleteCategories() {
         global $connection;
-        if(isset($_GET['delete'])) {
-            $delete_cat_id = $_GET['delete'];
-            $query = "DELETE FROM categories WHERE cat_id = {$delete_cat_id}";
-            $delete_cat_query = mysqli_query($connection, $query);
-            header("Location: categories.php");
+
+        if(isset($_SESSION['user_role'])) {
+            if($_SESSION['user_role'] == 'Admin') {
+                if(isset($_GET['delete'])) {
+                    $delete_cat_id = escape($_GET['delete']);
+                    $query = "DELETE FROM categories WHERE cat_id = {$delete_cat_id}";
+                    $delete_cat_query = mysqli_query($connection, $query);
+                    header("Location: categories.php");
+                }  
+            }
         }
     }
 

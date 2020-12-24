@@ -1,4 +1,7 @@
 <?php
+
+    include("delete_modal.php");
+
     if(isset($_POST['checkBoxArray'])) {
         foreach($_POST['checkBoxArray'] as $postValueId) {
             $bulk_options = $_POST['bulk_options'];
@@ -127,7 +130,8 @@
         echo "<td><a href='../post.php?p_id=$post_id'>View Post</a></td>";
         echo "<td><a href='posts.php?reset=$post_id'>{$post_view_count}</a></td>";
         echo "<td><a href='posts.php?source=edit_post&p_id=$post_id'>Edit</a></td>";
-        echo "<td><a onClick=\"javascript: return confirm('Are you sure, you want to delete it?');\" href='posts.php?delete=$post_id'>Delete</a></td>";
+        echo "<td><a rel='$post_id' href='javascript:void(0)' id='' class='delete_link'>Delete</a></td>";
+        // echo "<td><a id='deleteModal' href='posts.php?delete=$post_id'>Delete</a></td>";
         echo "</tr>";
     }
 ?>
@@ -136,7 +140,7 @@
 </form>
 <?php
     if(isset($_GET['published'])) {
-        $published_post_id = $_GET['published'];
+        $published_post_id = escape($_GET['published']);
         $query = "UPDATE posts SET post_status = 'published' WHERE post_id = {$published_post_id}";
         $published_post_query = mysqli_query($connection, $query);
         confirmQuery($published_post_query);
@@ -144,7 +148,7 @@
     }
 
     if(isset($_GET['draft'])) {
-        $draft_post_id = $_GET['draft'];
+        $draft_post_id = escape($_GET['draft']);
         $query = "UPDATE posts SET post_status = 'draft' WHERE post_id = {$draft_post_id}";
         $draft_post_query = mysqli_query($connection, $query);
         confirmQuery($draft_post_query);
@@ -153,7 +157,7 @@
     if(isset($_GET['delete'])) {
         if(isset($_SESSION['user_role'])) {
             if($_SESSION['user_role'] == 'Admin') {
-                $delete_post_id = mysqli_real_escape_string($connection, $_GET['delete']);
+                $delete_post_id = escape($_GET['delete']);
                 $query = "DELETE FROM posts WHERE post_id = $delete_post_id";
                 $delete_post_query = mysqli_query($connection, $query);
                 confirmQuery($delete_post_query);
@@ -165,10 +169,21 @@
         }   
     }
     if(isset($_GET['reset'])) {
-        $post_reset_id = $_GET['reset'];
+        $post_reset_id = escape($_GET['reset']);
         $query = "UPDATE posts SET post_view_count = 0 WHERE post_id = {$post_reset_id} ";
         $reset_query = mysqli_query($connection, $query);
         confirmQuery($reset_query);
         header("Location: posts.php");  
     }
 ?>
+
+<script>
+    $(document).ready(function(){
+        $(".delete_link").on('click', function(){
+            var id = $(this).attr("rel");
+            var delete_url = "posts.php?delete="+ id +" ";
+            $(".modal_delete_link").attr("href", delete_url);
+            $("#deleteModal").modal('show');
+        });
+    });
+</script>

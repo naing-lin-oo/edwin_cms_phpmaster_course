@@ -31,6 +31,7 @@
             while($row = mysqli_fetch_assoc($search_query)) {
                 $post_title = $row['post_title'];
                 $post_author = $row['post_author'];
+                $post_user = $row['post_user'];
                 $post_date = $row['post_date'];
                 $post_image = $row['post_image'];
                 $post_content = $row['post_content'];
@@ -43,7 +44,11 @@
                             <a href="#"><?php echo $post_title; ?></a>
                         </h2>
                         <p class="lead">
-                            by <a href="index.php"><?php echo $post_author; ?></a>
+                            by <a href="index.php"><?php if(!empty($post_author)) {
+                                echo $post_author;
+                            } elseif(!empty($post_user)) {
+                                echo $post_user;
+                            } ?></a>
                         </p>
                         <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo $post_date; ?></p>
                         <hr>

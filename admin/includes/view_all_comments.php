@@ -16,7 +16,7 @@
                             <tbody>
 <?php
     if(isset($_GET['cp_id'])) {
-        $cp_id = $_GET['cp_id'];
+        $cp_id = escape($_GET['cp_id']);
         $query = "SELECT * FROM comments WHERE comment_post_id = {$cp_id}";
         $select_comments = mysqli_query($connection, $query);
     } else {
@@ -67,7 +67,7 @@
                         </table>
 <?php
     if(isset($_GET['approve'])) {
-        $approve_comment_id = $_GET['approve'];
+        $approve_comment_id = escape($_GET['approve']);
         $query = "UPDATE comments SET comment_status = 'approved' WHERE comment_id = {$approve_comment_id}";
         $approve_comment_query = mysqli_query($connection, $query);
         confirmQuery($approve_comment_query);
@@ -75,7 +75,7 @@
     }
 
     if(isset($_GET['unapprove'])) {
-        $unapprove_comment_id = $_GET['unapprove'];
+        $unapprove_comment_id = escape($_GET['unapprove']);
         $query = "UPDATE comments SET comment_status = 'unapproved' WHERE comment_id = {$unapprove_comment_id}";
         $unapprove_comment_query = mysqli_query($connection, $query);
         confirmQuery($unapprove_comment_query);
@@ -83,13 +83,13 @@
     }
 
     if(isset($_GET['delete'])) {
-        $delete_comment_id = $_GET['delete'];
+        $delete_comment_id = escape($_GET['delete']);
         $query = "DELETE FROM comments WHERE comment_id = $delete_comment_id";
         $delete_comment_query = mysqli_query($connection, $query);
         confirmQuery($delete_comment_query);
 
         if(isset($_GET['cp_id'])) {
-            $cp_id = $_GET['cp_id'];
+            $cp_id = escape($_GET['cp_id']);
             header("Location: comments.php?cp_id={$cp_id}");
         } else {
             header("Location: comments.php");
