@@ -13,15 +13,28 @@
             <div class="col-md-8">
                 
 <?php
+    if(!empty($_SESSION['user_role']) && $_SESSION['user_role'] == 'Admin') {
 
-    if(isset($_GET["category"])) {
+        if(isset($_GET["category"])) {
         $cat_post_id = $_GET["category"];
         $query = "SELECT * FROM posts WHERE post_category_id = $cat_post_id";
         $search_query = mysqli_query($connection, $query);
         confirmQuery($search_query);
         $count = mysqli_num_rows($search_query);
+        } 
+    } elseif(empty($_SESSION['user_role'])) {
+
+        if(isset($_GET["category"])) {
+            $cat_post_id = $_GET["category"];
+            $query = "SELECT * FROM posts WHERE post_category_id = $cat_post_id AND post_status = 'published' ";
+            $search_query = mysqli_query($connection, $query);
+            confirmQuery($search_query);
+            
+        }
+    }
+        $count = mysqli_num_rows($search_query);
         if($count == 0) {
-            echo "<h1>No Result</h1>";
+            echo "<h1 class='text-center'>This category post is not available!!!</h1>";
         }else{
 ?>
                 <h1 class="page-header">
@@ -31,20 +44,17 @@
 <?php
             while($row = mysqli_fetch_assoc($search_query)) {
                 $post_title = $row['post_title'];
-                $post_author = $row['post_author'];
+                $post_user = $row['post_user'];
                 $post_date = $row['post_date'];
                 $post_image = $row['post_image'];
                 $post_content = substr($row['post_content'],0,10);
-        ?>
-        
-                        
-        
+?>
                         <!-- First Blog Post -->
                         <h2>
                             <a href="#"><?php echo $post_title; ?></a>
                         </h2>
                         <p class="lead">
-                            by <a href="index.php"><?php echo $post_author; ?></a>
+                            by <a href="index.php"><?php echo $post_user; ?></a>
                         </p>
                         <p><span class="glyphicon glyphicon-time"></span> Posted on <?php echo $post_date; ?></p>
                         <hr>
@@ -55,9 +65,8 @@
         
                         <hr>
 <?php
-            }      
-        }
-    }
+            }
+        }         
 ?>
  
 
